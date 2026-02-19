@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api.dart';
+import '../services/password_policy.dart';
 
 class EmployeeRegisterScreen extends StatefulWidget {
   final String inviteToken;
@@ -19,6 +20,13 @@ class _EmployeeRegisterScreenState extends State<EmployeeRegisterScreen> {
   String msg = "";
 
   Future<void> submit() async {
+    final pw = passCtrl.text;
+    final pwErr = PasswordPolicy.validate(pw);
+    if (pwErr != null) {
+      setState(() => msg = pwErr);
+      return;
+    }
+
     setState(() {
       busy = true;
       msg = "";
@@ -30,7 +38,7 @@ class _EmployeeRegisterScreenState extends State<EmployeeRegisterScreen> {
         fullName: nameCtrl.text.trim(),
         email: emailCtrl.text.trim(),
         phone: phoneCtrl.text.trim(),
-        password: passCtrl.text,
+        password: pw,
       );
 
       setState(() {
@@ -68,7 +76,14 @@ class _EmployeeRegisterScreenState extends State<EmployeeRegisterScreen> {
             const SizedBox(height: 12),
             TextField(controller: phoneCtrl, decoration: const InputDecoration(labelText: "No HP", border: OutlineInputBorder())),
             const SizedBox(height: 12),
-            TextField(controller: passCtrl, obscureText: true, decoration: const InputDecoration(labelText: "Password", border: OutlineInputBorder())),
+            TextField(
+              controller: passCtrl,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: "Password (min 8, ada besar/kecil/angka/simbol)",
+                border: OutlineInputBorder(),
+              ),
+            ),
             const SizedBox(height: 12),
             ElevatedButton(onPressed: busy ? null : submit, child: const Text("Register Karyawan")),
             const SizedBox(height: 12),

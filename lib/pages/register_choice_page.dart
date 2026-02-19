@@ -1,7 +1,6 @@
-// lib/pages/register_choice_page.dart
 import 'package:flutter/material.dart';
 import 'register_admin_page.dart';
-import 'register_employee_page.dart';
+import 'employee_scan_screen.dart';
 
 class RegisterChoicePage extends StatelessWidget {
   const RegisterChoicePage({super.key});
@@ -30,9 +29,9 @@ class RegisterChoicePage extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const RegisterEmployeePage()),
+                  MaterialPageRoute(builder: (_) => const EmployeeScanScreen()),
                 ),
-                child: const Text("Register sebagai Karyawan"),
+                child: const Text("Register sebagai Karyawan (Scan Barcode)"),
               ),
             ),
           ],

@@ -1,6 +1,6 @@
-// lib/pages/register_admin_page.dart
 import 'package:flutter/material.dart';
 import '../services/api.dart';
+import '../services/password_policy.dart';
 import 'totp_setup_page.dart';
 
 class RegisterAdminPage extends StatefulWidget {
@@ -38,6 +38,13 @@ class _RegisterAdminPageState extends State<RegisterAdminPage> {
   }
 
   Future<void> _submit() async {
+    final pw = _password.text;
+    final pwErr = PasswordPolicy.validate(pw);
+    if (pwErr != null) {
+      setState(() => _status = pwErr);
+      return;
+    }
+
     setState(() {
       _busy = true;
       _status = "Mengirim...";
@@ -48,7 +55,7 @@ class _RegisterAdminPageState extends State<RegisterAdminPage> {
         fullName: _fullName.text.trim(),
         email: _email.text.trim(),
         phone: _phone.text.trim(),
-        password: _password.text,
+        password: pw,
         companyName: _companyName.text.trim(),
         companyEmail: _companyEmail.text.trim(),
         companyPhone: _companyPhone.text.trim(),
@@ -91,7 +98,14 @@ class _RegisterAdminPageState extends State<RegisterAdminPage> {
             const SizedBox(height: 10),
             TextField(controller: _phone, decoration: const InputDecoration(labelText: "No HP", border: OutlineInputBorder())),
             const SizedBox(height: 10),
-            TextField(controller: _password, obscureText: true, decoration: const InputDecoration(labelText: "Password", border: OutlineInputBorder())),
+            TextField(
+              controller: _password,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: "Password (min 8, ada besar/kecil/angka/simbol)",
+                border: OutlineInputBorder(),
+              ),
+            ),
             const SizedBox(height: 16),
 
             const Align(alignment: Alignment.centerLeft, child: Text("Data Perusahaan")),

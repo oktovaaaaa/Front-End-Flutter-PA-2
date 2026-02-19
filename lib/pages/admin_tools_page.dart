@@ -1,5 +1,5 @@
-// lib/pages/admin_tools_page.dart
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import '../services/api.dart';
 
 class AdminToolsPage extends StatefulWidget {
@@ -111,22 +111,34 @@ class _AdminToolsPageState extends State<AdminToolsPage> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: _busy ? null : _generateInvite,
-                child: const Text("Generate Invite Token"),
+                child: const Text("Generate Invite (QR)"),
               ),
             ),
-            const SizedBox(height: 8),
-            if (_inviteToken.isNotEmpty) SelectableText("Invite token: $_inviteToken"),
-            const Divider(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: _busy ? null : _loadPending,
-                    child: const Text("Refresh Pending"),
-                  ),
+            const SizedBox(height: 12),
+
+            if (_inviteToken.isNotEmpty) ...[
+              const Text("Scan QR ini di HP karyawan (berlaku 60 menit):"),
+              const SizedBox(height: 10),
+              Center(
+                child: QrImageView(
+                  data: _inviteToken,
+                  size: 220,
                 ),
-              ],
+              ),
+              const SizedBox(height: 10),
+              SelectableText("Invite token: $_inviteToken"),
+            ],
+
+            const Divider(height: 24),
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _busy ? null : _loadPending,
+                child: const Text("Refresh Pending"),
+              ),
             ),
+
             const SizedBox(height: 8),
             Expanded(
               child: ListView.builder(
